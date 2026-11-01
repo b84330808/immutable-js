@@ -126,10 +126,13 @@ export class Range extends IndexedSeq {
   }
 
   equals(other) {
+    // Ranges with a different end can hold the same values (`Range(0, 10, 3)`
+    // and `Range(0, 11, 3)`), and the step does not matter for a single value.
     return other instanceof Range
-      ? this._start === other._start &&
-          this._end === other._end &&
-          this._step === other._step
+      ? this.size === other.size &&
+          (this.size === 0 ||
+            (this._start === other._start &&
+              (this.size === 1 || this._step === other._step)))
       : deepEqual(this, other);
   }
 }
